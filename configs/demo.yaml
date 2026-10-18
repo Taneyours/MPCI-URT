@@ -1,0 +1,65 @@
+experiment:
+  name: mpci_urt_demo
+  seed: 123456
+  device: auto
+
+trajectory_generation:
+  trips: data/demo/trips_features_demo.csv
+  stations: data/demo/stations_demo.csv
+  timetable: data/demo/timetable_demo.csv
+  base_stations: data/demo/base_stations_demo.csv
+  transfer_links: data/demo/transfer_links_demo.csv
+
+  station_times_output: outputs/demo_generated/station_times_demo.csv
+  topology_output: outputs/demo_generated/topology_from_trajectory_demo.csv
+  candidate_paths_output: outputs/demo_generated/candidate_paths_demo.csv
+  trajectory_scores_output: outputs/demo_generated/trajectory_scores_demo.csv
+  trajectory_metadata_output: outputs/demo_generated/trajectory_metadata_demo.csv
+
+  candidate_destinations: 3
+  paths_per_destination: 3
+  best_candidate_mode: legacy_max_destination_id
+  transfer_station_value: transfer
+
+  circular_line_id: L002
+  circular_line_period_seconds: 2640
+
+data:
+  trips: data/demo/trips_features_demo.csv
+  topology: data/demo/topology_demo.csv
+  trajectory_scores: outputs/demo_generated/trajectory_scores_demo.csv
+  feature_columns:
+    - user_id
+    - origin_station
+    - user_best_origin
+    - user_best_destination
+    - user_second_destination
+    - origin_best_destination
+    - hour
+    - weekday
+  label_column: destination_station
+  trajectory_prefix: dest_
+
+preprocessing:
+  scaler: minmax
+  scaler_fit_scope: train
+  train_ratio: 0.8
+  seq_len: 32
+
+model:
+  gnn_hidden_1: 64
+  gnn_hidden_2: 64
+  lstm_hidden: 32
+  lstm_layers: 1
+  fusion_hidden: 32
+
+training:
+  batch_size: 8
+  epochs: 2
+  learning_rate: 0.001
+  weight_decay: 0.0005
+  alpha: 0.9
+
+output:
+  checkpoint: outputs/mpci_urt_demo.pt
+  predictions: outputs/predictions_demo.csv
